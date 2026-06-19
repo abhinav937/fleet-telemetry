@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   if (!passkey) return NextResponse.json({ error: "Passkey not found" }, { status: 400 });
 
   // Decode clientDataJSON to extract the challenge value
-  const clientData = JSON.parse(Buffer.from(credential.clientDataJSON, "base64url").toString());
+  const clientData = JSON.parse(Buffer.from(credential.response.clientDataJSON, "base64url").toString());
   const challengeValue = clientData.challenge;
 
   const challengeResult = await db.send(new ScanCommand({
