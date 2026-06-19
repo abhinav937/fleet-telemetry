@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
     TableName: TABLES.challenges,
     FilterExpression: "userId = :uid",
     ExpressionAttributeValues: { ":uid": userId },
-    Limit: 1,
   }));
 
   const challenge = scan.Items?.[0];

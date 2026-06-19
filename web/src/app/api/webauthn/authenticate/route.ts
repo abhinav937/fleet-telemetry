@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
     TableName: TABLES.passkeys,
     FilterExpression: "credentialId = :cid",
     ExpressionAttributeValues: { ":cid": credential.id },
-    Limit: 1,
   }));
 
   const passkey = passkeyResult.Items?.[0];
@@ -42,7 +41,6 @@ export async function POST(req: NextRequest) {
     TableName: TABLES.challenges,
     FilterExpression: "expiresAt > :now",
     ExpressionAttributeValues: { ":now": new Date().toISOString() },
-    Limit: 1,
   }));
 
   const ch = challengeResult.Items?.[0];
