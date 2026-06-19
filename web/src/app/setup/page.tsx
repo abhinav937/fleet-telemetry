@@ -29,7 +29,10 @@ export default function SetupPage() {
         body: JSON.stringify({ credential, userId }),
       });
 
-      if (!verify.ok) throw new Error("Registration failed");
+      if (!verify.ok) {
+        const { error } = await verify.json();
+        throw new Error(error ?? "Registration failed");
+      }
 
       setStatus("done");
       setTimeout(() => router.push("/dashboard"), 1000);
