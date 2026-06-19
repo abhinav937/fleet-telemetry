@@ -51,7 +51,8 @@ export default function VehicleDashboard() {
         body: JSON.stringify({ vehicleId, command, body }),
       });
       const data = await res.json();
-      setNotification({ msg: data.response?.result ? "Command sent" : (data.response?.reason ?? "Done"), ok: res.ok });
+      const msg = data.error ?? (data.response?.result ? "Command sent" : (data.response?.reason ?? "Done"));
+      setNotification({ msg, ok: res.ok && !data.error });
     } catch {
       setNotification({ msg: "Command failed", ok: false });
     } finally {
