@@ -41,6 +41,10 @@ export async function POST(req: NextRequest) {
     }));
   }
 
-  const response = await sendCommand(token, vehicleId, command, body);
-  return NextResponse.json(response);
+  try {
+    const response = await sendCommand(token, vehicleId, command, body);
+    return NextResponse.json(response);
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : String(e) }, { status: 500 });
+  }
 }
