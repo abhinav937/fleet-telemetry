@@ -36,15 +36,20 @@ export async function POST(req: NextRequest) {
   const passkey = passkeyResult.Items?.[0];
   if (!passkey) return NextResponse.json({ error: "Passkey not found" }, { status: 400 });
 
-  // Get latest unexpired challenge
+  // Decode clientDataJSON to extract the challenge value
+  const clientData = JSON.parse(Buffer.from(credential.clientDataJSON, "base64url").toString());
+  const challengeValue = clientData.challenge;
+
   const challengeResult = await db.send(new ScanCommand({
     TableName: TABLES.challenges,
-    FilterExpression: "expiresAt > :now",
-    ExpressionAttributeValues: { ":now": new Date().toISOString() },
+    FilterExpression: "challenge = :ch",
+    ExpressionAttributeValues: { ":ch": challengeValue },
   }));
 
   const ch = challengeResult.Items?.[0];
-  if (!ch) return NextResponse.json({ error: "Challenge expired" }, { status: 400 });
+  if (!ch || new Date(ch.expiresAt) < new Date()) {
+    return NextResponse.json({ error: "Challenge expired" }, { status: 400 });
+  }
 
   const verification = await verifyAuthenticationResponse({
     response: credential,

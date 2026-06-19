@@ -25,7 +25,10 @@ export default function LoginPage() {
         body: JSON.stringify({ credential }),
       });
 
-      if (!verify.ok) throw new Error("Authentication failed");
+      if (!verify.ok) {
+        const { error } = await verify.json();
+        throw new Error(error ?? "Authentication failed");
+      }
 
       router.push("/dashboard");
     } catch (e) {
