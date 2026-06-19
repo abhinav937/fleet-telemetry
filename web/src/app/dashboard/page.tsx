@@ -30,9 +30,7 @@ export default async function DashboardPage() {
               Connect Tesla
             </a>
           )}
-          <form action="/api/auth/logout" method="POST">
-            <button className="text-zinc-400 hover:text-white text-sm transition-colors">Sign out</button>
-          </form>
+          <a href="/api/auth/logout" className="text-zinc-400 hover:text-white text-sm transition-colors">Sign out</a>
         </div>
       </header>
 
